@@ -1,0 +1,107 @@
+/* Global Styles */
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+.vert-text {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.header {
+  display: table;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background: url(../img/fool.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.logoImg {
+  width:15%;
+}
+
+/* Intro */
+
+.intro {
+  padding: 50px 0;
+  background-color: black;
+  color:white;
+}
+
+/* Services */
+
+.services {
+  background: white;
+  padding: 50px 0;
+  color: black;
+}
+
+.ficon {
+  width:200px;
+  margin-right: 20px;
+}
+
+/* Portfolio */
+
+.portfolio {
+  background-color: black;
+  color: white;
+  padding: 50px 0;
+}
+
+.portfolio-item {
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.portfolio-item a:hover {
+  color:gray;
+}
+
+.portfolio-item h4{
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.portfolio-item h5{
+  margin-top: 0;
+  color:gray;
+}
+
+.img-portfolio {
+  margin: 0 auto;
+}
+
+
+a {
+  text-decoration: none;
+  color:#ffffff;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+/* Footer */
+
+footer {
+  padding: 100px 0;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+	
+  .header {
+	background: url(../img/bg.jpg) no-repeat center center scroll; 
+  }
+}
