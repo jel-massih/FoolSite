@@ -65,6 +65,14 @@ $(function() {
 		if(x <= 0) {
 			$('#sliderhandle').css('left', -($('#sliderhandle').width()/2));
 		}
+
+		if(SCSound) {
+			var newPoint = SCSound.duration * (curPos/100);
+			startPoint = newPoint;
+			newPoint = Math.round(newPoint/1000);
+			var duration = (Math.floor(newPoint/60)) + ':' + ((newPoint%60 < 10) ? ('0' + (newPoint%60)) : (newPoint%60));
+		 	$("#time").text(duration);
+		}
 	});
 
 	playFile(songData["lazer_jungle"], false);
@@ -90,6 +98,7 @@ function playFile(file, bAutoPlay) {
 		}
  		SCSound = sound;
  		$("#track_title").text(file.artist + " - " + file.title);
+ 		$("#track_title").attr("href", "http://www.soundcloud.com/" + file.url);
  		if(bAutoPlay) {
  			resumeFile();
  		}
@@ -219,7 +228,7 @@ var songData = {
 		title: "Lazer Jungle"
 	},
 	"melodies_of_ordinary":{
-		url:"fuckourordinarylives",
+		url:"bonerizing-records/sets/f-o-o-l-melodies-of-the",
 		id: "28791374",
 		artist: "F.O.O.L",
 		title: "Dark Side"
@@ -249,7 +258,7 @@ var songData = {
 		title: "Reborn"
 	},
 	"berskgang":{
-		url:"",
+		url:"owlvision/f-o-o-l-berserkergang-owl-vision-remix",
 		id: "3894886",
 		artist: "F.O.O.L",
 		title: "Berserkergang (Owl Vision Remix)"

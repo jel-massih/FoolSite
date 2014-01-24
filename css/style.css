@@ -154,6 +154,11 @@ footer {
   margin-top: 10px;
 }
 
+#track_title:hover {
+  text-decoration: none;
+  color: gray;
+}
+
 #slider {
   position: absolute;
   left: 25%;
