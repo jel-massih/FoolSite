@@ -7,6 +7,42 @@ $(function() {
 		}
 	});
 
+	document.onmousemove =  function(e) {
+		if(startDrag == true) {
+      var p = $('#slider').offset(),
+      x = e.pageX - p.left,
+      y = e.pageY - p.top;
+
+      var curPos = Math.floor(x/$('#slider').width()*100);
+
+      
+      if(x < $('#slider').width()) {
+				$('#sliderhandle').css('left', curPos + "%");
+			}
+			if(x <= 0) {
+				$('#sliderhandle').css('left', 0);
+				curPos = 0;
+			}
+
+			if(curPos > 100) {curPos = 100;}
+
+			if(SCSound) {
+				var newPoint = SCSound.duration * (curPos/100);
+				startPoint = newPoint;
+				newPoint = Math.round(newPoint/1000);
+				var duration = (Math.floor(newPoint/60)) + ':' + ((newPoint%60 < 10) ? ('0' + (newPoint%60)) : (newPoint%60));
+			 	$("#time").text(duration);
+			}
+    }
+	};
+
+	document.onmouseup = function(e) {
+		if(startDrag) {
+			updateMusic();
+		}
+		startDrag = false;
+	}
+
 	$('#playBtn').click(function(evt) {
 		if(bPlaying) {
 			pauseFile();
@@ -15,12 +51,32 @@ $(function() {
 		}
 	});
 
+	$('#slider').mousedown(function(e) {
+		startDrag = true;
+		var p = $(this).offset(),
+		x = e.pageX - p.left,
+		y = e.pageY - p.top;
+		e.preventDefault();
+    var curPos = Math.floor(x/$(this).width()*100);
+
+		if(x < $('#slider').width()) {
+			$('#sliderhandle').css('left', curPos + "%");
+		}
+		if(x <= 0) {
+			$('#sliderhandle').css('left', -($('#sliderhandle').width()/2));
+		}
+	});
+
 	playFile(songData["lazer_jungle"], false);
 });
 
 var SCSound;
 var bPlaying = false;
+var startDrag = false;
+var startPoint = 0;
+var curFile;
 function playFile(file, bAutoPlay) {
+	curFile = file;
  	SC.stream("/tracks/" + file.id, function(sound){
  		SC.get("/tracks/" + file.id, function(info) {
 			info.duration = Math.round(info.duration/1000);
@@ -51,9 +107,11 @@ function pauseFile() {
 }
 
 function resumeFile() {
+	if(bPlaying) {return;}
 	if(SCSound) {
 		SCSound.play({
-			whileplaying: whileplaying
+			whileplaying: whileplaying,
+			onfinish: onfinish
 		});
 		$("#playBtn").removeClass("fa-play");
  		$("#playBtn").addClass("fa-stop");
@@ -63,10 +121,34 @@ function resumeFile() {
 
 var whileplaying = function() {
  	var percent = (this.position/this.duration) * 100;
- 	$("#progressBar").css("width", percent);
+ 	$("#progressBar").css("width", percent + '%');
 	this.position = Math.round(this.position/1000);
-	var duration = (Math.round(this.position/60)) + ':' + ((this.position%60 < 10) ? ('0' + (this.position%60)) : (this.position%60));
- 	$("#time").text(duration);
+	var duration = (Math.floor(this.position/60)) + ':' + ((this.position%60 < 10) ? ('0' + (this.position%60)) : (this.position%60));
+ 	if(!startDrag) {
+ 		$("#sliderhandle").css("left", percent + '%');
+ 		$("#time").text(duration);
+ 	}
+}
+
+var onfinish = function() {
+	playFile(curFile, false);
+
+ 	$("#progressBar").css("width", '0%');
+ 	if(!startDrag) {
+ 		$("#sliderhandle").css("left", '0%');
+ 		$("#time").text("0:00");
+ 	}
+}
+
+function updateMusic() {
+	if(SCSound == null) {
+		return;
+	}	
+
+	if(!bPlaying) {
+		resumeFile();
+	}
+	SCSound.setPosition(startPoint);
 }
 
 var songData = {
