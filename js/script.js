@@ -3,96 +3,179 @@ $(function() {
 	$('body').on('click', '.portfolio-item', function(evt) {
 		var name = this.id;
 		if(songData[name] != null) {
-			playFile(songData[name].id);
+			playFile(songData[name], true);
 		}
 	});
+
+	$('#playBtn').click(function(evt) {
+		if(bPlaying) {
+			pauseFile();
+		} else {
+			resumeFile();
+		}
+	});
+
+	playFile(songData["lazer_jungle"], false);
 });
 
 var SCSound;
 var bPlaying = false;
-function playFile(file) {
-	if(SCSound) {
-		SCSound.stop();
-	}
-  bPlaying = true;
-	console.log(file);
- 	SC.stream("/tracks/" + file, function(sound){
+function playFile(file, bAutoPlay) {
+ 	SC.stream("/tracks/" + file.id, function(sound){
+ 		SC.get("/tracks/" + file.id, function(info) {
+			info.duration = Math.round(info.duration/1000);
+ 			var duration = (Math.round(info.duration/60)) + ':' + ((info.duration%60 < 10) ? ('0' + (info.duration%60)) : (info.duration%60));
+ 			$("#total_time").text(duration);
+ 		});
+ 		sound.load();
+ 		pauseFile();
+ 		if(SCSound) {
+			SCSound.stop();
+		}
  		SCSound = sound;
-    sound.play();
+ 		$("#track_title").text(file.artist + " - " + file.title);
+ 		if(bAutoPlay) {
+ 			resumeFile();
+ 		}
   });
+}
+
+
+function pauseFile() {
+	if(SCSound) {
+		SCSound.pause();
+	}
+  bPlaying = false;
+	$("#playBtn").removeClass("fa-stop");
+ 	$("#playBtn").addClass("fa-play");
+}
+
+function resumeFile() {
+	if(SCSound) {
+		SCSound.play({
+			whileplaying: whileplaying
+		});
+		$("#playBtn").removeClass("fa-play");
+ 		$("#playBtn").addClass("fa-stop");
+  	bPlaying = true;
+	}
+}
+
+var whileplaying = function() {
+ 	var percent = (this.position/this.duration) * 100;
+ 	$("#progressBar").css("width", percent);
+	this.position = Math.round(this.position/1000);
+	var duration = (Math.round(this.position/60)) + ':' + ((this.position%60 < 10) ? ('0' + (this.position%60)) : (this.position%60));
+ 	$("#time").text(duration);
 }
 
 var songData = {
 	"lazer_jungle":{
 		url: "fuckourordinarylives/f-o-o-l-lazer-jungle",
-		id: "112274310"
+		id: "112274310",
+		artist: "F.O.O.L",
+		title: "Lazer Jungle"
 	},
 	"going_quantum":{
 		url:"fuckourordinarylives/f-o-o-l-going-quantum-mix",
-		id: "104956611"
+		id: "104956611",
+		artist: "F.O.O.L",
+		title: "Going Quantum Mixtape"
 	},
 	"feelings":{
 		url:"fuckourordinarylives/sets/f-o-o-l-feelings-ep",
-		id: "104096831"
+		id: "104096831",
+		artist: "F.O.O.L",
+		title: "Feelings EP Teaser"
 	},
 	"tutorials":{
 		url:"fuckourordinarylives/f-o-o-l-tutorials-1",
-		id: "101588478"
+		id: "101588478",
+		artist: "F.O.O.L",
+		title: "Tutorials"
 	},
 	"fuck_it":{
 		url:"fuckourordinarylives/f-o-o-l-fuck-it-original-mix",
-		id: "84289504"
+		id: "84289504",
+		artist: "F.O.O.L",
+		title: "Fuck It"
 	},
 	"destroyer_of_speakers":{
 		url:"fuckourordinarylives/sets/destroyer-of-speakers-ep",
-		id: "72749208"
+		id: "78266540",
+		artist: "F.O.O.L",
+		title: "Destroyer Of Speakers EP Teaser"
 	},
 	"the_game":{
 		url:"fuckourordinarylives/the-game-ep-teaser-1",
-		id: "61145520"
+		id: "61145520",
+		artist: "F.O.O.L",
+		title: "The Game EP Teaser"
 	},
 	"smoke_and_death":{
 		url:"fuckourordinarylives/f-o-o-l-smoke-death-original-1",
-		id: "59618941"
+		id: "59618941",
+		artist: "F.O.O.L",
+		title: "Smoke & Death"
 	},
 	"deaf":{
 		url:"fuckourordinarylives/f-o-o-l-your-ol-lady-deaf-1",
-		id: "57750645"
+		id: "57750645",
+		artist: "F.O.O.L & Your Ol Lady",
+		title: "Deaf"
 	},
 	"vision":{
 		url:"tuffemup/f-o-o-l-vision-ep-teaser",
-		id: "35595690"
+		id: "35595690",
+		artist: "F.O.O.L",
+		title: "Vision EP Teaser"
 	},
 	"comboe":{
 		url:"fuckourordinarylives/f-o-o-l-comboe-original-mix-1",
-		id: "42553860"
+		id: "42553860",
+		artist: "F.O.O.L",
+		title: "Lazer Jungle"
 	},
 	"melodies_of_ordinary":{
 		url:"fuckourordinarylives",
-		id: "28791374"
+		id: "28791374",
+		artist: "F.O.O.L",
+		title: "Dark Side"
 	},
 	"call_to_krieg":{
 		url:"fuckourordinarylives/call-to-krieg-ep-teaser",
-		id: "21322250"
+		id: "21322250",
+		artist: "F.O.O.L",
+		title: "Call To Krieg EP Teaser"
 	},
 	"invasion":{
 		url:"fuckourordinarylives/invasion-ep-teaser-omgitm-010",
-		id: "14341726"
+		id: "14341726",
+		artist: "F.O.O.L",
+		title: "Invasion EP Teaser"
 	},
 	"japan":{
 		url:"fuckourordinarylives/tjanb-free-ep-download",
-		id: "9833168"
+		id: "9833168",
+		artist: "F.O.O.L",
+		title: "To Japan And Never Back EP"
 	},
 	"reborn":{
 		url:"fuckourordinarylives/f-o-o-l-reborn-original-mix",
-		id: "7717421"
+		id: "7717421",
+		artist: "F.O.O.L",
+		title: "Reborn"
 	},
 	"berskgang":{
 		url:"",
-		id: "3894886"
+		id: "3894886",
+		artist: "F.O.O.L",
+		title: "Berserkergang (Owl Vision Remix)"
 	},
 	"we_are_not_french":{
 		url:"fuckourordinarylives/we-are-not-french-ep-teaser",
-		id: "4732255"
+		id: "4732255",
+		artist: "F.O.O.L",
+		title: "We Are Not French EP Teaser"
 	}
 }
