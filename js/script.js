@@ -27,7 +27,7 @@ $(function() {
 			if(curPos > 100) {curPos = 100;}
 
 			if(SCSound) {
-				var newPoint = SCSound.duration * (curPos/100);
+				var newPoint = SCSound.durationEstimate * (curPos/100);
 				startPoint = newPoint;
 				newPoint = Math.round(newPoint/1000);
 				var duration = (Math.floor(newPoint/60)) + ':' + ((newPoint%60 < 10) ? ('0' + (newPoint%60)) : (newPoint%60));
@@ -129,7 +129,7 @@ function resumeFile() {
 }
 
 var whileplaying = function() {
- 	var percent = (this.position/this.duration) * 100;
+ 	var percent = (this.position/this.durationEstimate) * 100;
  	$("#progressBar").css("width", percent + '%');
 	this.position = Math.round(this.position/1000);
 	var duration = (Math.floor(this.position/60)) + ':' + ((this.position%60 < 10) ? ('0' + (this.position%60)) : (this.position%60));
